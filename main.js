@@ -1,13 +1,11 @@
-
-
 var n
 init()
 setInterval(() => {
-  makeLeave(getImage(n))
+  getImage(n).makeLeave()
     .one('transitionend', (event) => {
-      makeEnter($(event.currentTarget))
+      $(event.currentTarget).makeEnter()
     })
-    makeCurrent(getImage(n + 1))
+  getImage(n + 1).makeCurrent()
   n += 1
 }, 2000);
 
@@ -28,17 +26,19 @@ function getImage(n) {
 function init() {
   n = 1
   $(`.images > img:nth-child(${n})`).addClass('current').siblings().addClass('enter')
+  addStateFunctionToJquery()
 }
 
-function makeEnter($node) {
-  return $node.removeClass('leave current').addClass('enter')
-}
+function addStateFunctionToJquery() {
+  $.prototype.makeCurrent = function() {
+    return this.removeClass('leave enter').addClass('current')
+  }
 
-function makeLeave($node) {
-  return $node.removeClass('current enter').addClass('leave')
-}
+  $.prototype.makeLeave = function() {
+    return this.removeClass('current enter').addClass('leave')
+  }
 
-function makeCurrent($node) {
-  return $node.removeClass('leave enter').addClass('current')
+  $.prototype.makeEnter = function() {
+    return this.removeClass('leave current').addClass('enter')
+  }
 }
-
