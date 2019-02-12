@@ -1,13 +1,27 @@
 var n
 init()
-setInterval(() => {
-  getImage(n).makeLeave()
-    .one('transitionend', (event) => {
-      $(event.currentTarget).makeEnter()
-    })
-  getImage(n + 1).makeCurrent()
-  n += 1
-}, 2000);
+var timer
+
+setTimer()
+
+document.addEventListener("visibilitychange", function(event) {
+  if (document.hidden) {
+    clearInterval(timer)
+  } else {
+    setTimer()
+  }
+})
+
+function setTimer() {
+  timer = setInterval(() => {
+    getImage(n).makeLeave()
+      .one('transitionend', (event) => {
+        $(event.currentTarget).makeEnter()
+      })
+    getImage(n + 1).makeCurrent()
+    n += 1
+  }, 2000);
+}
 
 function validN(n) {
   if(n > 4) {
